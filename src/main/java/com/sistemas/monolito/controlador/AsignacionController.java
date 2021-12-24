@@ -25,16 +25,13 @@ public class AsignacionController {
     public String getIndex(
             @PathVariable("ordenid") Long ordenid,
             Model model){
-        List<Asignacion> listaAsignaciones = new ArrayList<Asignacion>();
 
-        //Solo se deben mostrar las tareas de una Orden específica
-        for (Asignacion asignacion:asignacionService.listarTodos()){
-            if(asignacion.getOrden().getId() == ordenid){
-                listaAsignaciones.add(asignacion);
-            }
-        }
+        // Solo se deben mostrar las tareas de una Orden específica
         // agrega la lista al modelo para pasarlo a la vista
-        model.addAttribute("listaAsignaciones", listaAsignaciones);
+        model.addAttribute("listaAsignaciones",
+                asignacionService.listarTodos().stream()
+                        .filter((x)->x.getOrden().getId() == ordenid)
+                        .toList());
 
         return "asignacion/asignacionIndex";
     }

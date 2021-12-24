@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -52,7 +53,8 @@ public class OrdenController {
     public String postOrdenFormNew(
             @Valid @ModelAttribute("orden") Orden orden,
             BindingResult bindingResult,
-            Model model){
+            Model model,
+            RedirectAttributes redirectAttributes){
 
         List<Asignacion> asignaciones = new ArrayList<Asignacion>();
 
@@ -72,6 +74,7 @@ public class OrdenController {
 
         orden.setAsignaciones(asignaciones);
         ordenService.agregar(orden);
+        redirectAttributes.addFlashAttribute("flash", "Agregado correctamente");
 
         return "redirect:/orden/index";
     }
@@ -100,7 +103,8 @@ public class OrdenController {
     public String postOrdenFormEdit(
             @Valid @ModelAttribute("orden") Orden orden,
             BindingResult bindingResult,
-            Model model){
+            Model model,
+            RedirectAttributes redirectAttributes){
 
         if(bindingResult.hasErrors()){
             // en caso de error regresa al formulario
@@ -109,6 +113,7 @@ public class OrdenController {
             return "orden/ordenForm";
         }
         ordenService.agregar(orden);
+        redirectAttributes.addFlashAttribute("flash", "Modificado correctamente");
 
         return "redirect:/orden/index";
     }
@@ -116,9 +121,10 @@ public class OrdenController {
     @GetMapping("/eliminar/{id}")
     public String getOrdenEliminar(
             @PathVariable("id") Long id,
-            Model model){
+            RedirectAttributes redirectAttributes){
 
         ordenService.eliminar(id);
+        redirectAttributes.addFlashAttribute("flash", "Eliminado correctamente");
 
         return "redirect:/orden/index";
     }

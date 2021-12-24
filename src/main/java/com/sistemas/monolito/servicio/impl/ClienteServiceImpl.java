@@ -5,6 +5,7 @@ import com.sistemas.monolito.repositorio.ClienteRepository;
 import com.sistemas.monolito.servicio.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,8 +26,11 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    @Transactional
     public Optional<Cliente> buscar(Long id) {
-        return clienteRepository.findById(id);
+        Optional<Cliente> buscado = clienteRepository.findById(id);
+        buscado.ifPresent((cliente -> cliente.getOrdenes().size()));
+        return buscado;
     }
 
     @Override
